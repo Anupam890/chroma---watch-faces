@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Chrona</string>
+    <string name="tagline">Watch faces, reimagined</string>
+    <string name="nav_discover">Discover</string>
+    <string name="nav_my_watch">My Watch</string>
+    <string name="nav_favourites">Favourites</string>
+    <string name="nav_settings">Settings</string>
+    <string name="install">Install on watch</string>
+    <string name="installing">Sending to watch…</string>
+    <string name="installed">Installed</string>
+    <string name="set_active">Set as active</string>
+    <string name="remove">Remove</string>
+    <string name="no_watch">No watch connected</string>
+    <string name="no_watch_hint">Open Chrona on your Wear OS watch, or pair a watch in the Wear OS app.</string>
+    <string name="requires_wear6">Requires Wear OS 6 for direct install. On older watches, get it from Google Play.</string>
+</resources>

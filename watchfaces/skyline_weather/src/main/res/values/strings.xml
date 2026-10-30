@@ -1,0 +1,8 @@
+<resources>
+    <string name="watch_face_name">Skyline</string>
+    <string name="theme_label">Colour theme</string>
+    <string name="aurora">Aurora</string><string name="ember">Ember</string><string name="ocean">Ocean</string><string name="graphite">Graphite</string><string name="mint">Mint</string>
+    <string name="units_label">Temperature units</string><string name="units_c">°C</string><string name="units_f">°F</string>
+    <string name="forecast_label">Forecast strip</string><string name="sun_arc_label">Sun arc</string>
+    <string name="flavor_clear">Clear</string><string name="flavor_storm">Storm</string><string name="flavor_dusk">Dusk</string>
+</resources>

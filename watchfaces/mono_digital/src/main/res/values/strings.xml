@@ -1,0 +1,9 @@
+<resources>
+    <string name="watch_face_name">Mono</string>
+    <string name="theme_label">Colour theme</string>
+    <string name="aurora">Aurora</string><string name="ember">Ember</string><string name="ocean">Ocean</string><string name="graphite">Graphite</string><string name="mint">Mint</string>
+    <string name="weight_label">Type weight</string>
+    <string name="weight_thin">Thin</string><string name="weight_regular">Regular</string><string name="weight_black">Black</string>
+    <string name="date_label">Show date</string><string name="battery_label">Battery hairline</string>
+    <string name="flavor_pure">Pure</string><string name="flavor_night">Night</string><string name="flavor_loud">Loud</string>
+</resources>

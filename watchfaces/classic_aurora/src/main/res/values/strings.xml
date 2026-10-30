@@ -1,0 +1,10 @@
+<resources>
+    <string name="watch_face_name">Aurora Classic</string>
+    <string name="theme_label">Colour theme</string>
+    <string name="aurora">Aurora</string><string name="ember">Ember</string><string name="ocean">Ocean</string><string name="graphite">Graphite</string><string name="mint">Mint</string>
+    <string name="hands_label">Hand style</string>
+    <string name="hands_dauphine">Dauphine</string><string name="hands_baton">Baton</string><string name="hands_skeleton">Skeleton</string>
+    <string name="seconds_label">Seconds hand</string>
+    <string name="date_label">Date window</string>
+    <string name="flavor_evening">Evening</string><string name="flavor_daylight">Daylight</string><string name="flavor_mono">Monochrome</string>
+</resources>

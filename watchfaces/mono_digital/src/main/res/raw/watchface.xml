@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WatchFace width="450" height="450" clipShape="CIRCLE">
+    <Metadata key="CLOCK_TYPE" value="DIGITAL" />
+    <Metadata key="PREVIEW_TIME" value="10:08:32" />
+    <UserConfigurations>
+        <ColorConfiguration id="theme" displayName="theme_label" defaultValue="0" screenReaderText="theme_label">
+            <ColorOption id="0" displayName="aurora"   colors="#7C5CFF #F7F3EA #0B0B12" />
+            <ColorOption id="1" displayName="ember"    colors="#FF5E5B #FFE9D6 #140808" />
+            <ColorOption id="2" displayName="ocean"    colors="#4CC9F0 #E6FBFF #04101A" />
+            <ColorOption id="3" displayName="graphite" colors="#B8B4AE #FFFFFF #000000" />
+            <ColorOption id="4" displayName="mint"     colors="#5BE7C4 #F0FFFA #06110E" />
+        </ColorConfiguration>
+        <ListConfiguration id="weight" displayName="weight_label" defaultValue="2">
+            <ListOption id="0" displayName="weight_thin" /><ListOption id="1" displayName="weight_regular" /><ListOption id="2" displayName="weight_black" />
+        </ListConfiguration>
+        <BooleanConfiguration id="date" displayName="date_label" defaultValue="TRUE" />
+        <BooleanConfiguration id="battery" displayName="battery_label" defaultValue="TRUE" />
+        <Flavors defaultValue="pure">
+            <Flavor id="pure" displayName="flavor_pure"><Configuration id="theme" optionId="3" /><Configuration id="weight" optionId="1" /><Configuration id="date" optionId="FALSE" /><Configuration id="battery" optionId="FALSE" /></Flavor>
+            <Flavor id="night" displayName="flavor_night"><Configuration id="theme" optionId="0" /><Configuration id="weight" optionId="0" /><Configuration id="date" optionId="TRUE" /><Configuration id="battery" optionId="TRUE" /></Flavor>
+            <Flavor id="loud" displayName="flavor_loud"><Configuration id="theme" optionId="1" /><Configuration id="weight" optionId="2" /><Configuration id="date" optionId="TRUE" /><Configuration id="battery" optionId="TRUE" /></Flavor>
+        </Flavors>
+    </UserConfigurations>
+
+    <Scene backgroundColor="[CONFIGURATION.theme.2]">
+        <!-- Hours: auto-sizing text fills its box -->
+        <ListConfiguration id="weight">
+            <ListOption id="0">
+                <DigitalClock x="45" y="70" width="360" height="160">
+                    <TimeText format="hh" align="CENTER" hourFormat="SYNC_TO_DEVICE"><Font family="SYNC_TO_DEVICE" size="150" weight="THIN" color="[CONFIGURATION.theme.1]" /></TimeText>
+                </DigitalClock>
+                <DigitalClock x="45" y="220" width="360" height="160">
+                    <TimeText format="mm" align="CENTER"><Font family="SYNC_TO_DEVICE" size="150" weight="THIN" color="[CONFIGURATION.theme.0]" /></TimeText>
+                </DigitalClock>
+            </ListOption>
+            <ListOption id="1">
+                <DigitalClock x="45" y="70" width="360" height="160">
+                    <TimeText format="hh" align="CENTER" hourFormat="SYNC_TO_DEVICE"><Font family="SYNC_TO_DEVICE" size="150" weight="NORMAL" color="[CONFIGURATION.theme.1]" /></TimeText>
+                </DigitalClock>
+                <DigitalClock x="45" y="220" width="360" height="160">
+                    <TimeText format="mm" align="CENTER"><Font family="SYNC_TO_DEVICE" size="150" weight="NORMAL" color="[CONFIGURATION.theme.0]" /></TimeText>
+                </DigitalClock>
+            </ListOption>
+            <ListOption id="2">
+                <DigitalClock x="45" y="70" width="360" height="160">
+                    <TimeText format="hh" align="CENTER" hourFormat="SYNC_TO_DEVICE"><Font family="SYNC_TO_DEVICE" size="150" weight="EXTRA_BOLD" color="[CONFIGURATION.theme.1]" /></TimeText>
+                </DigitalClock>
+                <DigitalClock x="45" y="220" width="360" height="160">
+                    <TimeText format="mm" align="CENTER"><Font family="SYNC_TO_DEVICE" size="150" weight="EXTRA_BOLD" color="[CONFIGURATION.theme.0]" /></TimeText>
+                </DigitalClock>
+            </ListOption>
+        </ListConfiguration>
+
+        <!-- Hairline divider doubles as battery gauge -->
+        <Condition>
+            <Expressions><Expression name="bat"><![CDATA[[CONFIGURATION.battery] == "TRUE"]]></Expression></Expressions>
+            <Compare expression="bat">
+                <PartDraw x="105" y="222" width="240" height="4">
+                    <Line startX="0" startY="2" endX="240" endY="2"><Stroke color="[CONFIGURATION.theme.1]" thickness="2" /><Transform target="alpha" value="60" /></Line>
+                    <Line startX="0" startY="2" endX="240" endY="2"><Stroke color="[CONFIGURATION.theme.0]" thickness="3" cap="ROUND" /><Transform target="endX" value="240 * [BATTERY_PERCENT] / 100" /></Line>
+                </PartDraw>
+            </Compare>
+        </Condition>
+
+        <Condition>
+            <Expressions><Expression name="d"><![CDATA[[CONFIGURATION.date] == "TRUE"]]></Expression></Expressions>
+            <Compare expression="d">
+                <PartText x="75" y="385" width="300" height="30">
+                    <Text align="CENTER"><Font family="SYNC_TO_DEVICE" size="20" weight="MEDIUM" color="[CONFIGURATION.theme.1]"><Template>%s %d %s<Parameter expression="[DAY_OF_WEEK_S]" /><Parameter expression="[DAY]" /><Parameter expression="[MONTH_S]" /></Template></Font></Text>
+                </PartText>
+            </Compare>
+        </Condition>
+
+        <ComplicationSlot slotId="0" x="195" y="22" width="60" height="40" supportedTypes="SHORT_TEXT SMALL_IMAGE" name="top">
+            <DefaultProviderPolicy defaultSystemProvider="NEXT_EVENT" defaultSystemProviderType="SHORT_TEXT" />
+            <BoundingBox x="0" y="0" width="60" height="40" />
+            <Complication type="SHORT_TEXT"><PartText x="0" y="0" width="60" height="40"><Text align="CENTER"><Font family="SYNC_TO_DEVICE" size="16" color="[CONFIGURATION.theme.1]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font></Text></PartText></Complication>
+            <Complication type="SMALL_IMAGE"><PartImage x="15" y="5" width="30" height="30"><Image resource="[COMPLICATION.SMALL_IMAGE]" /></PartImage></Complication>
+        </ComplicationSlot>
+    </Scene>
+</WatchFace>

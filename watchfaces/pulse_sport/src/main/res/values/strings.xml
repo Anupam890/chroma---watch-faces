@@ -1,0 +1,8 @@
+<resources>
+    <string name="watch_face_name">Pulse</string>
+    <string name="theme_label">Colour theme</string>
+    <string name="aurora">Aurora</string><string name="ember">Ember</string><string name="ocean">Ocean</string><string name="graphite">Graphite</string><string name="mint">Mint</string>
+    <string name="ring_steps_label">Steps ring</string><string name="ring_hr_label">Heart-rate ring</string><string name="weather_label">Weather chip</string>
+    <string name="goal_label">Step goal</string><string name="goal_6k">6,000</string><string name="goal_8k">8,000</string><string name="goal_10k">10,000</string><string name="goal_12k">12,000</string>
+    <string name="flavor_run">Run</string><string name="flavor_gym">Gym</string><string name="flavor_recovery">Recovery</string>
+</resources>

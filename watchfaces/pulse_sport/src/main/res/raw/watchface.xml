@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WatchFace width="450" height="450" clipShape="CIRCLE">
+    <Metadata key="CLOCK_TYPE" value="DIGITAL" />
+    <Metadata key="PREVIEW_TIME" value="10:08:32" />
+    <Metadata key="STEP_GOAL" value="10000" />
+    <UserConfigurations>
+        <ColorConfiguration id="theme" displayName="theme_label" defaultValue="0" screenReaderText="theme_label">
+            <ColorOption id="0" displayName="aurora"   colors="#7C5CFF #F7F3EA #0B0B12" />
+            <ColorOption id="1" displayName="ember"    colors="#FF5E5B #FFE9D6 #140808" />
+            <ColorOption id="2" displayName="ocean"    colors="#4CC9F0 #E6FBFF #04101A" />
+            <ColorOption id="3" displayName="graphite" colors="#B8B4AE #FFFFFF #000000" />
+            <ColorOption id="4" displayName="mint"     colors="#5BE7C4 #F0FFFA #06110E" />
+        </ColorConfiguration>
+        <BooleanConfiguration id="ring_steps" displayName="ring_steps_label" defaultValue="TRUE" />
+        <BooleanConfiguration id="ring_hr" displayName="ring_hr_label" defaultValue="TRUE" />
+        <BooleanConfiguration id="weather" displayName="weather_label" defaultValue="TRUE" />
+        <ListConfiguration id="goal" displayName="goal_label" defaultValue="2">
+            <ListOption id="0" displayName="goal_6k" /><ListOption id="1" displayName="goal_8k" /><ListOption id="2" displayName="goal_10k" /><ListOption id="3" displayName="goal_12k" />
+        </ListConfiguration>
+        <Flavors defaultValue="run">
+            <Flavor id="run" displayName="flavor_run"><Configuration id="theme" optionId="1" /><Configuration id="ring_steps" optionId="TRUE" /><Configuration id="ring_hr" optionId="TRUE" /><Configuration id="weather" optionId="TRUE" /></Flavor>
+            <Flavor id="gym" displayName="flavor_gym"><Configuration id="theme" optionId="0" /><Configuration id="ring_steps" optionId="FALSE" /><Configuration id="ring_hr" optionId="TRUE" /><Configuration id="weather" optionId="FALSE" /></Flavor>
+            <Flavor id="recovery" displayName="flavor_recovery"><Configuration id="theme" optionId="4" /><Configuration id="ring_steps" optionId="TRUE" /><Configuration id="ring_hr" optionId="FALSE" /><Configuration id="weather" optionId="TRUE" /></Flavor>
+        </Flavors>
+    </UserConfigurations>
+
+    <Scene backgroundColor="[CONFIGURATION.theme.2]">
+        <!-- Outer ring: steps vs goal (goal from list) -->
+        <Condition>
+            <Expressions>
+                <Expression name="steps"><![CDATA[[CONFIGURATION.ring_steps] == "TRUE"]]></Expression>
+                <Expression name="goalValue"><![CDATA[[CONFIGURATION.goal] == "0" ? 6000 : ([CONFIGURATION.goal] == "1" ? 8000 : ([CONFIGURATION.goal] == "3" ? 12000 : 10000))]]></Expression>
+            </Expressions>
+            <Compare expression="steps">
+                <PartDraw x="0" y="0" width="450" height="450">
+                    <Arc centerX="225" centerY="225" width="410" height="410" startAngle="0" endAngle="360"><Stroke color="[CONFIGURATION.theme.0]" thickness="16" cap="ROUND" /><Transform target="alpha" value="50" /></Arc>
+                    <Arc centerX="225" centerY="225" width="410" height="410" startAngle="0" endAngle="0"><Stroke color="[CONFIGURATION.theme.0]" thickness="16" cap="ROUND" />
+                        <Transform target="endAngle" value="clamp(360 * [STEP_COUNT] / goalValue, 0, 360)" />
+                    </Arc>
+                </PartDraw>
+            </Compare>
+        </Condition>
+        <!-- Middle ring: heart rate zone (50–180 bpm) -->
+        <Condition>
+            <Expressions><Expression name="hr"><![CDATA[[CONFIGURATION.ring_hr] == "TRUE"]]></Expression></Expressions>
+            <Compare expression="hr">
+                <PartDraw x="0" y="0" width="450" height="450">
+                    <Arc centerX="225" centerY="225" width="360" height="360" startAngle="0" endAngle="360"><Stroke color="#5BE7C4" thickness="16" cap="ROUND" /><Transform target="alpha" value="50" /></Arc>
+                    <Arc centerX="225" centerY="225" width="360" height="360" startAngle="0" endAngle="0"><Stroke color="#5BE7C4" thickness="16" cap="ROUND" />
+                        <Transform target="endAngle" value="clamp(360 * ([HEART_RATE] - 50) / 130, 0, 360)" />
+                    </Arc>
+                </PartDraw>
+            </Compare>
+        </Condition>
+
+        <DigitalClock x="75" y="150" width="300" height="110">
+            <TimeText format="hh:mm" align="CENTER" hourFormat="SYNC_TO_DEVICE"><Font family="SYNC_TO_DEVICE" size="96" weight="BOLD" color="[CONFIGURATION.theme.1]" /></TimeText>
+        </DigitalClock>
+        <PartText x="125" y="255" width="200" height="28">
+            <Text align="CENTER"><Font family="SYNC_TO_DEVICE" size="20" color="[CONFIGURATION.theme.0]"><Template>%d steps · %d bpm<Parameter expression="[STEP_COUNT]" /><Parameter expression="[HEART_RATE]" /></Template></Font></Text>
+        </PartText>
+
+        <!-- Weather chip (v2) -->
+        <Condition>
+            <Expressions><Expression name="w"><![CDATA[[CONFIGURATION.weather] == "TRUE" && [WEATHER.IS_AVAILABLE]]]></Expression></Expressions>
+            <Compare expression="w">
+                <Group x="150" y="100" width="150" height="40" name="weatherChip">
+                    <PartDraw x="0" y="0" width="150" height="40"><Rectangle x="0" y="0" width="150" height="40" cornerRadius="20"><Fill color="[CONFIGURATION.theme.0]" /><Transform target="alpha" value="40" /></Rectangle></PartDraw>
+                    <PartText x="0" y="0" width="150" height="40">
+                        <Text align="CENTER"><Font family="SYNC_TO_DEVICE" size="18" color="[CONFIGURATION.theme.1]"><Template>%d° %s<Parameter expression="[WEATHER.TEMPERATURE]" /><Parameter expression="[WEATHER.CONDITION_NAME]" /></Template></Font></Text>
+                    </PartText>
+                </Group>
+            </Compare>
+        </Condition>
+
+        <!-- Four complication slots around the bottom -->
+        <ComplicationSlot slotId="0" x="80"  y="300" width="60" height="60" supportedTypes="SHORT_TEXT RANGED_VALUE GOAL_PROGRESS" name="c1"><DefaultProviderPolicy defaultSystemProvider="WATCH_BATTERY" defaultSystemProviderType="RANGED_VALUE" /><BoundingOval x="0" y="0" width="60" height="60" /><Complication type="RANGED_VALUE">
+                <PartDraw x="0" y="0" width="60" height="60">
+                    <Arc centerX="30" centerY="30" width="52" height="52" startAngle="0" endAngle="360"><Stroke color="[CONFIGURATION.theme.0]" thickness="4" cap="ROUND" /><Transform target="endAngle" value="360 * ([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN])" /></Arc>
+                </PartDraw>
+                <PartText x="0" y="0" width="60" height="60"><Text align="CENTER"><Font family="SYNC_TO_DEVICE" size="14" color="[CONFIGURATION.theme.1]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font></Text></PartText>
+            </Complication>
+            <Complication type="SHORT_TEXT">
+                <PartText x="0" y="0" width="60" height="60"><Text align="CENTER"><Font family="SYNC_TO_DEVICE" size="18" color="[CONFIGURATION.theme.1]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font></Text></PartText>
+            </Complication></ComplicationSlot>
+        <ComplicationSlot slotId="1" x="160" y="330" width="60" height="60" supportedTypes="SHORT_TEXT RANGED_VALUE GOAL_PROGRESS" name="c2"><DefaultProviderPolicy defaultSystemProvider="DISTANCE" defaultSystemProviderType="SHORT_TEXT" /><BoundingOval x="0" y="0" width="60" height="60" /><Complication type="RANGED_VALUE">
+                <PartDraw x="0" y="0" width="60" height="60">
+                    <Arc centerX="30" centerY="30" width="52" height="52" startAngle="0" endAngle="360"><Stroke color="[CONFIGURATION.theme.0]" thickness="4" cap="ROUND" /><Transform target="endAngle" value="360 * ([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN])" /></Arc>
+                </PartDraw>
+                <PartText x="0" y="0" width="60" height="60"><Text align="CENTER"><Font family="SYNC_TO_DEVICE" size="14" color="[CONFIGURATION.theme.1]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font></Text></PartText>
+            </Complication>
+            <Complication type="SHORT_TEXT">
+                <PartText x="0" y="0" width="60" height="60"><Text align="CENTER"><Font family="SYNC_TO_DEVICE" size="18" color="[CONFIGURATION.theme.1]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font></Text></PartText>
+            </Complication></ComplicationSlot>
+        <ComplicationSlot slotId="2" x="230" y="330" width="60" height="60" supportedTypes="SHORT_TEXT RANGED_VALUE GOAL_PROGRESS" name="c3"><DefaultProviderPolicy defaultSystemProvider="FLOORS" defaultSystemProviderType="SHORT_TEXT" /><BoundingOval x="0" y="0" width="60" height="60" /><Complication type="RANGED_VALUE">
+                <PartDraw x="0" y="0" width="60" height="60">
+                    <Arc centerX="30" centerY="30" width="52" height="52" startAngle="0" endAngle="360"><Stroke color="[CONFIGURATION.theme.0]" thickness="4" cap="ROUND" /><Transform target="endAngle" value="360 * ([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN])" /></Arc>
+                </PartDraw>
+                <PartText x="0" y="0" width="60" height="60"><Text align="CENTER"><Font family="SYNC_TO_DEVICE" size="14" color="[CONFIGURATION.theme.1]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font></Text></PartText>
+            </Complication>
+            <Complication type="SHORT_TEXT">
+                <PartText x="0" y="0" width="60" height="60"><Text align="CENTER"><Font family="SYNC_TO_DEVICE" size="18" color="[CONFIGURATION.theme.1]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font></Text></PartText>
+            </Complication></ComplicationSlot>
+        <ComplicationSlot slotId="3" x="310" y="300" width="60" height="60" supportedTypes="SHORT_TEXT RANGED_VALUE GOAL_PROGRESS" name="c4"><DefaultProviderPolicy defaultSystemProvider="SUNRISE_SUNSET" defaultSystemProviderType="SHORT_TEXT" /><BoundingOval x="0" y="0" width="60" height="60" /><Complication type="RANGED_VALUE">
+                <PartDraw x="0" y="0" width="60" height="60">
+                    <Arc centerX="30" centerY="30" width="52" height="52" startAngle="0" endAngle="360"><Stroke color="[CONFIGURATION.theme.0]" thickness="4" cap="ROUND" /><Transform target="endAngle" value="360 * ([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN])" /></Arc>
+                </PartDraw>
+                <PartText x="0" y="0" width="60" height="60"><Text align="CENTER"><Font family="SYNC_TO_DEVICE" size="14" color="[CONFIGURATION.theme.1]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font></Text></PartText>
+            </Complication>
+            <Complication type="SHORT_TEXT">
+                <PartText x="0" y="0" width="60" height="60"><Text align="CENTER"><Font family="SYNC_TO_DEVICE" size="18" color="[CONFIGURATION.theme.1]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font></Text></PartText>
+            </Complication></ComplicationSlot>
+    </Scene>
+</WatchFace>

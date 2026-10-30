@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WatchFace width="450" height="450" clipShape="CIRCLE">
+    <Metadata key="CLOCK_TYPE" value="ANALOG" />
+    <Metadata key="PREVIEW_TIME" value="10:08:32" />
+    <UserConfigurations>
+        <ColorConfiguration id="theme" displayName="theme_label" defaultValue="0" screenReaderText="theme_label">
+            <ColorOption id="0" displayName="aurora"   colors="#7C5CFF #F7F3EA #0B0B12" />
+            <ColorOption id="1" displayName="ember"    colors="#FF5E5B #FFE9D6 #140808" />
+            <ColorOption id="2" displayName="ocean"    colors="#4CC9F0 #E6FBFF #04101A" />
+            <ColorOption id="3" displayName="graphite" colors="#B8B4AE #FFFFFF #000000" />
+            <ColorOption id="4" displayName="mint"     colors="#5BE7C4 #F0FFFA #06110E" />
+        </ColorConfiguration>
+        <ListConfiguration id="hands" displayName="hands_label" defaultValue="0">
+            <ListOption id="0" displayName="hands_dauphine" />
+            <ListOption id="1" displayName="hands_baton" />
+            <ListOption id="2" displayName="hands_skeleton" />
+        </ListConfiguration>
+        <BooleanConfiguration id="seconds" displayName="seconds_label" defaultValue="TRUE" />
+        <BooleanConfiguration id="date" displayName="date_label" defaultValue="TRUE" />
+        <Flavors defaultValue="evening">
+            <Flavor id="evening" displayName="flavor_evening">
+                <Configuration id="theme" optionId="0" /><Configuration id="hands" optionId="0" /><Configuration id="seconds" optionId="TRUE" /><Configuration id="date" optionId="TRUE" />
+                <ComplicationSlot slotId="0"><DefaultProviderPolicy defaultSystemProvider="STEP_COUNT" defaultSystemProviderType="SHORT_TEXT" /></ComplicationSlot>
+                <ComplicationSlot slotId="1"><DefaultProviderPolicy defaultSystemProvider="WATCH_BATTERY" defaultSystemProviderType="RANGED_VALUE" /></ComplicationSlot>
+            </Flavor>
+            <Flavor id="daylight" displayName="flavor_daylight">
+                <Configuration id="theme" optionId="3" /><Configuration id="hands" optionId="1" /><Configuration id="seconds" optionId="FALSE" /><Configuration id="date" optionId="TRUE" />
+            </Flavor>
+            <Flavor id="mono" displayName="flavor_mono">
+                <Configuration id="theme" optionId="3" /><Configuration id="hands" optionId="2" /><Configuration id="seconds" optionId="TRUE" /><Configuration id="date" optionId="FALSE" />
+            </Flavor>
+        </Flavors>
+    </UserConfigurations>
+
+    <Scene backgroundColor="[CONFIGURATION.theme.2]">
+        <Group x="0" y="0" width="450" height="450" name="dial">
+            <PartDraw x="0" y="0" width="450" height="450">
+                <Arc centerX="225" centerY="225" width="420" height="420" startAngle="0" endAngle="360">
+                    <Stroke color="[CONFIGURATION.theme.0]" thickness="2" dashIntervals="2 20" cap="ROUND" />
+                </Arc>
+                <Arc centerX="225" centerY="225" width="420" height="420" startAngle="0" endAngle="360">
+                    <Stroke color="[CONFIGURATION.theme.1]" thickness="6" dashIntervals="4 106" cap="ROUND" />
+                </Arc>
+            </PartDraw>
+            <PartDraw x="0" y="0" width="450" height="450" alpha="60">
+                <Ellipse x="70" y="70" width="310" height="310"><Stroke color="[CONFIGURATION.theme.0]" thickness="3" /></Ellipse>
+            </PartDraw>
+        </Group>
+
+        <Condition>
+            <Expressions><Expression name="showDate"><![CDATA[[CONFIGURATION.date] == "TRUE"]]></Expression></Expressions>
+            <Compare expression="showDate">
+                <PartText x="285" y="208" width="70" height="34">
+                    <Text align="CENTER"><Font family="SYNC_TO_DEVICE" size="24" weight="BOLD" color="[CONFIGURATION.theme.1]"><Template>%d<Parameter expression="[DAY]" /></Template></Font></Text>
+                </PartText>
+            </Compare>
+        </Condition>
+
+        <ComplicationSlot slotId="0" x="95" y="195" width="60" height="60" supportedTypes="SHORT_TEXT RANGED_VALUE" name="left">
+            <DefaultProviderPolicy defaultSystemProvider="STEP_COUNT" defaultSystemProviderType="SHORT_TEXT" />
+            <BoundingOval x="0" y="0" width="60" height="60" outlinePadding="2" />
+            <Complication type="RANGED_VALUE">
+                <PartDraw x="0" y="0" width="60" height="60">
+                    <Arc centerX="30" centerY="30" width="52" height="52" startAngle="0" endAngle="360"><Stroke color="[CONFIGURATION.theme.0]" thickness="4" cap="ROUND" /><Transform target="endAngle" value="360 * ([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN])" /></Arc>
+                </PartDraw>
+                <PartText x="0" y="0" width="60" height="60"><Text align="CENTER"><Font family="SYNC_TO_DEVICE" size="14" color="[CONFIGURATION.theme.1]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font></Text></PartText>
+            </Complication>
+            <Complication type="SHORT_TEXT">
+                <PartText x="0" y="0" width="60" height="60"><Text align="CENTER"><Font family="SYNC_TO_DEVICE" size="18" color="[CONFIGURATION.theme.1]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font></Text></PartText>
+            </Complication>
+        </ComplicationSlot>
+        <ComplicationSlot slotId="1" x="195" y="300" width="60" height="60" supportedTypes="SHORT_TEXT RANGED_VALUE" name="bottom">
+            <DefaultProviderPolicy defaultSystemProvider="WATCH_BATTERY" defaultSystemProviderType="RANGED_VALUE" />
+            <BoundingOval x="0" y="0" width="60" height="60" outlinePadding="2" />
+            <Complication type="RANGED_VALUE">
+                <PartDraw x="0" y="0" width="60" height="60">
+                    <Arc centerX="30" centerY="30" width="52" height="52" startAngle="0" endAngle="360"><Stroke color="[CONFIGURATION.theme.0]" thickness="4" cap="ROUND" /><Transform target="endAngle" value="360 * ([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN])" /></Arc>
+                </PartDraw>
+                <PartText x="0" y="0" width="60" height="60"><Text align="CENTER"><Font family="SYNC_TO_DEVICE" size="14" color="[CONFIGURATION.theme.1]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font></Text></PartText>
+            </Complication>
+            <Complication type="SHORT_TEXT">
+                <PartText x="0" y="0" width="60" height="60"><Text align="CENTER"><Font family="SYNC_TO_DEVICE" size="18" color="[CONFIGURATION.theme.1]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font></Text></PartText>
+            </Complication>
+        </ComplicationSlot>
+
+        <ListConfiguration id="hands">
+            <ListOption id="0">
+                <AnalogClock x="0" y="0" width="450" height="450">
+                    <HourHand   x="217" y="95"  width="16" height="130" pivotX="0.5" pivotY="1.0" resource="@drawable/hand_hour_dauphine"   tintColor="[CONFIGURATION.theme.1]" />
+                    <MinuteHand x="219" y="45"  width="12" height="180" pivotX="0.5" pivotY="1.0" resource="@drawable/hand_minute_dauphine" tintColor="[CONFIGURATION.theme.1]" />
+                </AnalogClock>
+            </ListOption>
+            <ListOption id="1">
+                <AnalogClock x="0" y="0" width="450" height="450">
+                    <HourHand   x="219" y="100" width="12" height="125" pivotX="0.5" pivotY="1.0" resource="@drawable/hand_hour_baton"   tintColor="[CONFIGURATION.theme.1]" />
+                    <MinuteHand x="221" y="50"  width="8"  height="175" pivotX="0.5" pivotY="1.0" resource="@drawable/hand_minute_baton" tintColor="[CONFIGURATION.theme.1]" />
+                </AnalogClock>
+            </ListOption>
+            <ListOption id="2">
+                <AnalogClock x="0" y="0" width="450" height="450">
+                    <HourHand   x="215" y="95"  width="20" height="130" pivotX="0.5" pivotY="1.0" resource="@drawable/hand_hour_skeleton"   tintColor="[CONFIGURATION.theme.1]" />
+                    <MinuteHand x="217" y="45"  width="16" height="180" pivotX="0.5" pivotY="1.0" resource="@drawable/hand_minute_skeleton" tintColor="[CONFIGURATION.theme.1]" />
+                </AnalogClock>
+            </ListOption>
+        </ListConfiguration>
+
+        <Condition>
+            <Expressions><Expression name="showSec"><![CDATA[[CONFIGURATION.seconds] == "TRUE"]]></Expression></Expressions>
+            <Compare expression="showSec">
+                <Group x="0" y="0" width="450" height="450" name="secondsGroup">
+                    <Variant mode="AMBIENT" target="alpha" value="0" />
+                    <AnalogClock x="0" y="0" width="450" height="450">
+                        <SecondHand x="223" y="35" width="4" height="220" pivotX="0.5" pivotY="0.864" resource="@drawable/hand_second" tintColor="[CONFIGURATION.theme.0]">
+                            <Sweep frequency="15" />
+                        </SecondHand>
+                    </AnalogClock>
+                </Group>
+            </Compare>
+        </Condition>
+
+        <PartDraw x="215" y="215" width="20" height="20">
+            <Ellipse x="0" y="0" width="20" height="20"><Fill color="[CONFIGURATION.theme.0]" /></Ellipse>
+        </PartDraw>
+    </Scene>
+</WatchFace>

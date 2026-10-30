@@ -1,0 +1,10 @@
+<resources>
+    <string name="watch_face_name">Memories</string>
+    <string name="theme_label">Colour theme</string>
+    <string name="aurora">Aurora</string><string name="ember">Ember</string><string name="ocean">Ocean</string><string name="graphite">Graphite</string><string name="mint">Mint</string>
+    <string name="photos_label">Photos</string><string name="advance_label">Gallery advance</string>
+    <string name="advance_tap">On tap</string><string name="advance_hour">Hourly</string><string name="advance_day">Daily</string>
+    <string name="clock_pos_label">Clock position</string><string name="pos_top">Top</string><string name="pos_centre">Centre</string><string name="pos_bottom">Bottom</string>
+    <string name="scrim_label">Readability scrim</string>
+    <string name="flavor_gallery">Gallery</string><string name="flavor_portrait">Portrait</string><string name="flavor_minimal">Minimal</string>
+</resources>

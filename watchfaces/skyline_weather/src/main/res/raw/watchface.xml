@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WatchFace width="450" height="450" clipShape="CIRCLE">
+    <Metadata key="CLOCK_TYPE" value="DIGITAL" />
+    <Metadata key="PREVIEW_TIME" value="10:08:32" />
+    <UserConfigurations>
+        <ColorConfiguration id="theme" displayName="theme_label" defaultValue="0" screenReaderText="theme_label">
+            <ColorOption id="0" displayName="aurora"   colors="#7C5CFF #F7F3EA #0B0B12" />
+            <ColorOption id="1" displayName="ember"    colors="#FF5E5B #FFE9D6 #140808" />
+            <ColorOption id="2" displayName="ocean"    colors="#4CC9F0 #E6FBFF #04101A" />
+            <ColorOption id="3" displayName="graphite" colors="#B8B4AE #FFFFFF #000000" />
+            <ColorOption id="4" displayName="mint"     colors="#5BE7C4 #F0FFFA #06110E" />
+        </ColorConfiguration>
+        <ListConfiguration id="units" displayName="units_label" defaultValue="0">
+            <ListOption id="0" displayName="units_c" /><ListOption id="1" displayName="units_f" />
+        </ListConfiguration>
+        <BooleanConfiguration id="forecast" displayName="forecast_label" defaultValue="TRUE" />
+        <BooleanConfiguration id="sun_arc" displayName="sun_arc_label" defaultValue="TRUE" />
+        <Flavors defaultValue="clear">
+            <Flavor id="clear" displayName="flavor_clear"><Configuration id="theme" optionId="2" /><Configuration id="forecast" optionId="TRUE" /><Configuration id="sun_arc" optionId="TRUE" /></Flavor>
+            <Flavor id="storm" displayName="flavor_storm"><Configuration id="theme" optionId="3" /><Configuration id="forecast" optionId="TRUE" /><Configuration id="sun_arc" optionId="FALSE" /></Flavor>
+            <Flavor id="dusk" displayName="flavor_dusk"><Configuration id="theme" optionId="1" /><Configuration id="forecast" optionId="FALSE" /><Configuration id="sun_arc" optionId="TRUE" /></Flavor>
+        </Flavors>
+    </UserConfigurations>
+
+    <Scene backgroundColor="[CONFIGURATION.theme.2]">
+        <!-- Sun arc from sunrise to sunset, with marker at current time -->
+        <Condition>
+            <Expressions>
+                <Expression name="arc"><![CDATA[[CONFIGURATION.sun_arc] == "TRUE"]]></Expression>
+                <Expression name="dayFrac"><![CDATA[clamp(([MINUTE_OF_DAY] - [SUNRISE_MINUTE_OF_DAY]) / max(1, [SUNSET_MINUTE_OF_DAY] - [SUNRISE_MINUTE_OF_DAY]), 0, 1)]]></Expression>
+            </Expressions>
+            <Compare expression="arc">
+                <PartDraw x="0" y="0" width="450" height="450">
+                    <Arc centerX="225" centerY="260" width="380" height="380" startAngle="270" endAngle="450"><Stroke color="[CONFIGURATION.theme.0]" thickness="3" dashIntervals="4 8" /><Transform target="alpha" value="120" /></Arc>
+                    <Arc centerX="225" centerY="260" width="380" height="380" startAngle="270" endAngle="270"><Stroke color="#FFC857" thickness="5" cap="ROUND" /><Transform target="endAngle" value="270 + 180 * dayFrac" /></Arc>
+                </PartDraw>
+            </Compare>
+        </Condition>
+
+        <DigitalClock x="60" y="120" width="330" height="110">
+            <TimeText format="hh:mm" align="CENTER" hourFormat="SYNC_TO_DEVICE"><Font family="SYNC_TO_DEVICE" size="100" weight="LIGHT" color="[CONFIGURATION.theme.1]" /></TimeText>
+        </DigitalClock>
+
+        <!-- Current conditions -->
+        <Condition>
+            <Expressions><Expression name="avail"><![CDATA[[WEATHER.IS_AVAILABLE]]]></Expression></Expressions>
+            <Compare expression="avail">
+                <ListConfiguration id="units">
+                    <ListOption id="0">
+                        <PartText x="75" y="235" width="300" height="34"><Text align="CENTER"><Font family="SYNC_TO_DEVICE" size="26" weight="MEDIUM" color="[CONFIGURATION.theme.0]"><Template>%d°C · %s<Parameter expression="[WEATHER.TEMPERATURE]" /><Parameter expression="[WEATHER.CONDITION_NAME]" /></Template></Font></Text></PartText>
+                    </ListOption>
+                    <ListOption id="1">
+                        <PartText x="75" y="235" width="300" height="34"><Text align="CENTER"><Font family="SYNC_TO_DEVICE" size="26" weight="MEDIUM" color="[CONFIGURATION.theme.0]"><Template>%d°F · %s<Parameter expression="[WEATHER.TEMPERATURE_FAHRENHEIT]" /><Parameter expression="[WEATHER.CONDITION_NAME]" /></Template></Font></Text></PartText>
+                    </ListOption>
+                </ListConfiguration>
+                <!-- Hourly forecast strip -->
+                <Condition>
+                    <Expressions><Expression name="fc"><![CDATA[[CONFIGURATION.forecast] == "TRUE"]]></Expression></Expressions>
+                    <Compare expression="fc">
+                        <Group x="45" y="285" width="360" height="60" name="forecast">
+                            <PartText x="0"   y="0" width="60" height="60"><Text align="CENTER"><Font family="SYNC_TO_DEVICE" size="16" color="[CONFIGURATION.theme.1]"><Template>+1h\n%d°<Parameter expression="[WEATHER.HOURS.1.TEMPERATURE]" /></Template></Font></Text></PartText>
+                            <PartText x="60"  y="0" width="60" height="60"><Text align="CENTER"><Font family="SYNC_TO_DEVICE" size="16" color="[CONFIGURATION.theme.1]"><Template>+2h\n%d°<Parameter expression="[WEATHER.HOURS.2.TEMPERATURE]" /></Template></Font></Text></PartText>
+                            <PartText x="120" y="0" width="60" height="60"><Text align="CENTER"><Font family="SYNC_TO_DEVICE" size="16" color="[CONFIGURATION.theme.1]"><Template>+3h\n%d°<Parameter expression="[WEATHER.HOURS.3.TEMPERATURE]" /></Template></Font></Text></PartText>
+                            <PartText x="180" y="0" width="60" height="60"><Text align="CENTER"><Font family="SYNC_TO_DEVICE" size="16" color="[CONFIGURATION.theme.1]"><Template>+4h\n%d°<Parameter expression="[WEATHER.HOURS.4.TEMPERATURE]" /></Template></Font></Text></PartText>
+                            <PartText x="240" y="0" width="60" height="60"><Text align="CENTER"><Font family="SYNC_TO_DEVICE" size="16" color="[CONFIGURATION.theme.1]"><Template>+5h\n%d°<Parameter expression="[WEATHER.HOURS.5.TEMPERATURE]" /></Template></Font></Text></PartText>
+                            <PartText x="300" y="0" width="60" height="60"><Text align="CENTER"><Font family="SYNC_TO_DEVICE" size="16" color="[CONFIGURATION.theme.1]"><Template>+6h\n%d°<Parameter expression="[WEATHER.HOURS.6.TEMPERATURE]" /></Template></Font></Text></PartText>
+                        </Group>
+                    </Compare>
+                </Condition>
+            </Compare>
+            <Default>
+                <PartText x="75" y="235" width="300" height="34"><Text align="CENTER"><Font family="SYNC_TO_DEVICE" size="20" color="[CONFIGURATION.theme.1]"><Template>Weather unavailable</Template></Font></Text></PartText>
+            </Default>
+        </Condition>
+
+        <ComplicationSlot slotId="0" x="70"  y="55" width="60" height="60" supportedTypes="SHORT_TEXT RANGED_VALUE" name="left"><DefaultProviderPolicy defaultSystemProvider="WATCH_BATTERY" defaultSystemProviderType="RANGED_VALUE" /><BoundingOval x="0" y="0" width="60" height="60" /><Complication type="RANGED_VALUE">
+                <PartDraw x="0" y="0" width="60" height="60">
+                    <Arc centerX="30" centerY="30" width="52" height="52" startAngle="0" endAngle="360"><Stroke color="[CONFIGURATION.theme.0]" thickness="4" cap="ROUND" /><Transform target="endAngle" value="360 * ([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN])" /></Arc>
+                </PartDraw>
+                <PartText x="0" y="0" width="60" height="60"><Text align="CENTER"><Font family="SYNC_TO_DEVICE" size="14" color="[CONFIGURATION.theme.1]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font></Text></PartText>
+            </Complication>
+            <Complication type="SHORT_TEXT">
+                <PartText x="0" y="0" width="60" height="60"><Text align="CENTER"><Font family="SYNC_TO_DEVICE" size="18" color="[CONFIGURATION.theme.1]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font></Text></PartText>
+            </Complication></ComplicationSlot>
+        <ComplicationSlot slotId="1" x="320" y="55" width="60" height="60" supportedTypes="SHORT_TEXT RANGED_VALUE" name="right"><DefaultProviderPolicy defaultSystemProvider="STEP_COUNT" defaultSystemProviderType="SHORT_TEXT" /><BoundingOval x="0" y="0" width="60" height="60" /><Complication type="RANGED_VALUE">
+                <PartDraw x="0" y="0" width="60" height="60">
+                    <Arc centerX="30" centerY="30" width="52" height="52" startAngle="0" endAngle="360"><Stroke color="[CONFIGURATION.theme.0]" thickness="4" cap="ROUND" /><Transform target="endAngle" value="360 * ([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN])" /></Arc>
+                </PartDraw>
+                <PartText x="0" y="0" width="60" height="60"><Text align="CENTER"><Font family="SYNC_TO_DEVICE" size="14" color="[CONFIGURATION.theme.1]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font></Text></PartText>
+            </Complication>
+            <Complication type="SHORT_TEXT">
+                <PartText x="0" y="0" width="60" height="60"><Text align="CENTER"><Font family="SYNC_TO_DEVICE" size="18" color="[CONFIGURATION.theme.1]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font></Text></PartText>
+            </Complication></ComplicationSlot>
+    </Scene>
+</WatchFace>
